@@ -28,7 +28,7 @@ pipeline {
                         dir("terraform")
                         {
                             sh("""
-                                git clone "https://github.com/Tejasks16/terra-cloud.git"
+                                git clone "https://github.com/chetanJain19/terra-cloud.git"
                              """)
                         }
                     }
