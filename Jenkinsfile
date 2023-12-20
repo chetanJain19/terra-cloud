@@ -10,10 +10,10 @@ pipeline {
 
 
      environment {
-        AWS_ACCESS_KEY_ID     = credentials('AWS_ACCESS_KEY_ID').toString()
-        AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY').toString()
+        AWS_ACCESS_KEY_ID     = credentials('AWS_ACCESS_KEY_ID')
+        AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
         AWS_DEFAULT_REGION    = "ap-south-1"
-        PATH = "/usr/local/bin:$PATH"
+        #PATH = "/usr/local/bin:$PATH"
     }
 
 
