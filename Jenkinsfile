@@ -11,11 +11,8 @@ pipeline {
 
      environment {
         AWS_ACCESS_KEY_ID     = credentials('AWS_ACCESS_KEY_ID')
-        
         AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
-        
-        AWS_DEFAULT_REGION    = "ap-south-1"
-        
+        AWS_DEFAULT_REGION    = "us-east-1"
     }
 
 
@@ -28,49 +25,36 @@ pipeline {
             }
             steps {
                  script{
-                        script {
-                            deleteDir()
-                            dir("terraform") {
-                                sh "git clone https://github.com/chetanJain19/terra-cloud.git"
-                                echo "terraform"
-                                echo "$AWS_SECRET_ACCESS_KEY"
-                                echo "$AWS_ACCESS_KEY_ID"
-                                }
-                         }
+                        dir("terraform")
+                        {
+                            sh("""
+                                rm -rf terra-cloud
+                                git clone "https://github.com/avpaws444/terra-cloud.git"
+                             """)
+                        }
                     }
                 }
             }
-        stage("terraform init"){
-            steps{
-                sh "terraform init"
-            }
-        }
 
         stage('Plan') {
-    when {
-        not {
-            expression { params.destroy }
-        }
-    }
-
-    steps {
-        script {
-            dir('ec2') {
-                dir('terraform') {
-                    sh 'terraform init -input=false'
-                    sh "terraform workspace select ${environment} || terraform workspace new ${environment}"
-                    sh 'terraform plan -input=false -out tfplan'
-                    sh 'terraform show -no-color tfplan > tfplan.txt'
+            when {
+                not {
+                    equals expected: true, actual: params.destroy
                 }
             }
-        }
-    }
-}
+            
+            steps {
+                sh 'terraform init -input=false'
+                sh 'terraform workspace select ${environment} || terraform workspace new ${environment}'
 
+                sh "terraform plan -input=false -out tfplan "
+                sh 'terraform show -no-color tfplan > tfplan.txt'
+            }
+        }
         stage('Approval') {
            when {
                not {
-                   equals expected: true, actual: params.autoApprove
+                   equals expected: false, actual: params.autoApprove
                }
                not {
                     equals expected: true, actual: params.destroy
@@ -109,4 +93,3 @@ pipeline {
 
   }
 }
-
