@@ -42,23 +42,26 @@ pipeline {
             }
 
         stage('Plan') {
-            when {
-                not {
-                    expression { params.destroy }
-                    }
-                }
+    when {
+        not {
+            expression { params.destroy }
+        }
+    }
 
-            steps {
-                script {
-                    dir('ec2') {
-                        sh 'terraform init -input=false'
-                        sh "terraform workspace select ${environment} || terraform workspace new ${environment}"
-                        sh 'terraform plan -input=false -out tfplan'
-                        sh 'terraform show -no-color tfplan > tfplan.txt'
-                            }
-                        }
-                    }
+    steps {
+        script {
+            dir('ec2') {
+                dir('terraform') {
+                    sh 'terraform init -input=false'
+                    sh "terraform workspace select ${environment} || terraform workspace new ${environment}"
+                    sh 'terraform plan -input=false -out tfplan'
+                    sh 'terraform show -no-color tfplan > tfplan.txt'
+                }
             }
+        }
+    }
+}
+
         stage('Approval') {
            when {
                not {
