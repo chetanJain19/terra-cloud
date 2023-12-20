@@ -40,6 +40,11 @@ pipeline {
                     }
                 }
             }
+        stage("terraform init"){
+            steps{
+                sh "terraform init"
+            }
+        }
 
         stage('Plan') {
     when {
