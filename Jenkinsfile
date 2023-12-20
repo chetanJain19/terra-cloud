@@ -26,12 +26,12 @@ pipeline {
             }
             steps {
                  script{
-                        dir("terraform")
-                        {
-                            sh("""
-                                git clone "https://github.com/chetanJain19/terra-cloud.git"
-                             """)
-                        }
+                        script {
+                            deleteDir()
+                            dir("terraform") {
+                                sh "git clone https://github.com/chetanJain19/terra-cloud.git"
+                                }
+                         }
                     }
                 }
             }
