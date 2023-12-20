@@ -11,7 +11,9 @@ pipeline {
 
      environment {
         AWS_ACCESS_KEY_ID     = credentials('AWS_ACCESS_KEY_ID')
+        echo "$AWS_ACCESS_KEY_ID"
         AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
+         echo "$AWS_SECRET_ACCESS_KEY
         AWS_DEFAULT_REGION    = "ap-south-1"
         
     }
@@ -30,6 +32,7 @@ pipeline {
                             deleteDir()
                             dir("terraform") {
                                 sh "git clone https://github.com/chetanJain19/terra-cloud.git"
+                                echo "terraform"
                                 }
                          }
                     }
